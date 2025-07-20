@@ -1,5 +1,5 @@
 # Framework`Patcher`
-[![Modify Frameworks](https://github.com/Jefino9488/FrameworkPatcher/actions/workflows/patcher.yml/badge.svg)](https://github.com/Jefino9488/FrameworkPatcher/actions/workflows/patcher.yml) [![Website Deployment](https://github.com/Jefino9488/FrameworkPatcher/actions/workflows/deploy.yml/badge.svg)](https://github.com/Jefino9488/FrameworkPatcher/actions/workflows/deploy.yml)
+[![Modify Frameworks](https://github.com/rinnsakaguchi/FrameworkPatcher/actions/workflows/patcher.yml/badge.svg)](https://github.com/rinnsakaguchi/FrameworkPatcher/actions/workflows/patcher.yml) [![Website Deployment](https://github.com/rinnsakaguchi/FrameworkPatcher/actions/workflows/deploy.yml/badge.svg)](https://github.com/rinnsakaguchi/FrameworkPatcher/actions/workflows/deploy.yml)
 ## Description
 
 This framework patcher patches miui/hyper frameworks 
@@ -17,7 +17,7 @@ Refer to the usage section to know how to use this patcher
 
 ## Usage
 
-- Visit the [Website of FrameworkPatcher](https://jefino9488.github.io/FrameworkPatcher/).  
+- Visit the [Website of FrameworkPatcher](https://rinnsakaguchi.github.io/FrameworkPatcher/).  
 - Provide the required **direct URLs of the files**, including Google Drive links with "Anyone with the link" download permissions enabled.  
 - Ensure that the links are shared properly to allow public access.  
 - Enter the device name and ROM version correctly.  
