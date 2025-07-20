@@ -6,7 +6,7 @@ on:
       jar_urls:
         description: 'JSON object containing URLs to download the JAR files'
         required: true
-        default: '{"framework_jar_url": "", "services_jar_url": "", "miui_services_jar_url": "", "miui_framework_jar_url": ""}'
+        default: '{"framework_jar_url": "", "services_jar_url": ""}'
       android_api_level:
         description: 'Android API level'
         required: true
@@ -54,8 +54,6 @@ jobs:
       run: |
         framework_jar_url=$(jq -r .framework_jar_url jar_urls.json)
         services_jar_url=$(jq -r .services_jar_url jar_urls.json)
-        miui_services_jar_url=$(jq -r .miui_services_jar_url jar_urls.json)
-        miui_framework_jar_url=$(jq -r .miui_framework_jar_url jar_urls.json)
         android_api_level=${{ github.event.inputs.android_api_level }}
 
         isCN=$(jq -r .isCN features.json)
@@ -75,8 +73,6 @@ jobs:
         # Export variables for use in subsequent steps
         echo "framework_jar_url=$framework_jar_url" >> $GITHUB_ENV
         echo "services_jar_url=$services_jar_url" >> $GITHUB_ENV
-        echo "miui_services_jar_url=$miui_services_jar_url" >> $GITHUB_ENV
-        echo "miui_framework_jar_url=$miui_framework_jar_url" >> $GITHUB_ENV
 
         echo "isCN=$isCN" >> $GITHUB_ENV
         echo "defaultcore=$defaultcore" >> $GITHUB_ENV
@@ -101,10 +97,8 @@ jobs:
 
         download_file "${{ env.framework_jar_url }}" framework.jar
         download_file "${{ env.services_jar_url }}" services.jar
-        download_file "${{ env.miui_services_jar_url }}" miui-services.jar
-        download_file "${{ env.miui_framework_jar_url }}" miui-framework.jar
 
-        for jar in framework.jar services.jar miui-services.jar miui-framework.jar; do
+        for jar in framework.jar services.jar; do
           file_size=$(stat -c%s "$jar")
           if [ $file_size -lt 1500000 ]; then
             echo "Error: $jar is too small. Download might have failed." >&2
@@ -117,12 +111,6 @@ jobs:
 
     - name: Extract services.jar
       run: 7z x services.jar -oservices
-
-    - name: Extract miui-services.jar
-      run: 7z x miui-services.jar -omiui_services
-
-    - name: Extract miui-framework.jar
-      run: 7z x miui-framework.jar -omiui_framework
 
     - name: Decompile framework dex files if available
       run: |
@@ -154,14 +142,6 @@ jobs:
           fi
         done
 
-    - name: Decompile miui-services dex file
-      run: |
-        java -jar baksmali.jar d -a ${{ github.event.inputs.android_api_level }} miui_services/classes.dex -o miui_services_classes
-
-    - name: Decompile miui-framework dex file
-      run: |
-        java -jar baksmali.jar d -a ${{ github.event.inputs.android_api_level }} miui_framework/classes.dex -o miui_framework_classes
-
     - name: Backup smali files
       run: |
         cp -r classes classes_backup || echo "classes directory not found, skipping backup."
@@ -184,14 +164,6 @@ jobs:
     - name: Modify services smali
       run: |
         python3 services_patch.py "${{ env.defaultcore }}" "${{ env.disableFlagSecure }}"
-
-    - name: Modify miui-services smali files
-      run: |
-        python3 miui-service_Patch.py "${{ env.isCN }}" "${{ env.fixNotification }}" "${{ env.multiFloatingWindow }}" "${{ env.addGboard }}" "${{ env.disableFlagSecure }}"
-
-    - name: Modify miui-framework smali files
-      run: |
-        python3 miui-framework_patch.py "${{ env.addGboard }}"
 
     - name: Recompile framework dex files
       run: |
@@ -223,14 +195,6 @@ jobs:
           fi
         done
 
-    - name: Recompile miui-services dex file
-      run: |
-        java -jar smali.jar a -a ${{ github.event.inputs.android_api_level }} miui_services_classes -o miui_services/classes.dex
-
-    - name: Recompile miui-framework dex file
-      run: |
-        java -jar smali.jar a -a ${{ github.event.inputs.android_api_level }} miui_framework_classes -o miui_framework/classes.dex
-
     - name: Recompile framework.jar
       run: |
         cd framework
@@ -243,24 +207,10 @@ jobs:
         7z a -tzip ../services_new.zip *
         cd ..
 
-    - name: Recompile miui-services.jar
-      run: |
-        cd miui_services
-        7z a -tzip ../miui_services_new.zip *
-        cd ..
-
-    - name: Recompile miui-framework.jar
-      run: |
-        cd miui_framework
-        7z a -tzip ../miui_framework_new.zip *
-        cd ..
-
     - name: Align the zips
       run: |
         zipalign -f -p -v -z 4 framework_new.zip aligned_framework.jar
         zipalign -f -p -v -z 4 services_new.zip aligned_services.jar
-        zipalign -f -p -v -z 4 miui_services_new.zip aligned_miui_services.jar
-        zipalign -f -p -v -z 4 miui_framework_new.zip aligned_miui_framework.jar
 
     - name: Copy aligned jars to Magisk module
       run: |
@@ -268,8 +218,6 @@ jobs:
         mkdir -p magisk_module/system/system_ext/framework
         cp aligned_framework.jar magisk_module/system/framework/framework.jar
         cp aligned_services.jar magisk_module/system/framework/services.jar
-        cp aligned_miui_services.jar magisk_module/system/system_ext/framework/miui-services.jar
-        cp aligned_miui_framework.jar magisk_module/system/system_ext/framework/miui-framework.jar
 
     - name: Create Version From Link
       run: |
