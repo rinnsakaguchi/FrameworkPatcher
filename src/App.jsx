@@ -24,7 +24,7 @@ const App = () => {
   const [customVersion, setCustomVersion] = useState('');
   const formRef = useRef(null);
   const GITHUB_TOKEN = import.meta.env.VITE_GITHUB_TOKEN;
-  const REPO_OWNER = 'Jefino9488';
+  const REPO_OWNER = 'rinnsakaguchi';
   const REPO_NAME = 'FrameworkPatcher';
   const WORKFLOW_ID = 'patcher.yml';
   const octokit = new Octokit({
@@ -127,11 +127,11 @@ const App = () => {
   };
 
   const handleRedirect = () => {
-    window.open('https://github.com/Jefino9488/FrameworkPatcher/releases', '_blank');
+    window.open('https://github.com/rinnsakaguchi/FrameworkPatcher/releases', '_blank');
   };
 
   const handleRedirectBuild = () => {
-    window.open('https://github.com/Jefino9488/FrameworkPatcher/actions/workflows/patcher.yml', '_blank');
+    window.open('https://github.com/rinnsakaguchi/FrameworkPatcher/actions/workflows/patcher.yml', '_blank');
   };
 
   const handleDeviceNameChange = (e) => {
