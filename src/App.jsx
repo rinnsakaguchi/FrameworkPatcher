@@ -12,8 +12,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 const App = () => {
   const [frameworkJarUrl, setFrameworkJarUrl] = useState('');
   const [servicesJarUrl, setServicesJarUrl] = useState('');
-  const [miuiServicesJarUrl, setMiuiServicesJarUrl] = useState('');
-  const [miuiFrameworkJarUrl, setMiuiFrameworkJarUrl] = useState('');
   const [androidApiLevel, setAndroidApiLevel] = useState('34');
   const [isCN, setIsCN] = useState('true');
   const [defaultcore, setDefaultCore] = useState('true');
@@ -48,9 +46,7 @@ const App = () => {
 
     if (
       isBlockedUrl(frameworkJarUrl) ||
-      isBlockedUrl(servicesJarUrl) ||
-      isBlockedUrl(miuiServicesJarUrl) ||
-      isBlockedUrl(miuiFrameworkJarUrl)
+      isBlockedUrl(servicesJarUrl)
     ) {
       window.alert('The provided URL is not allowed.');
       return;
@@ -78,8 +74,6 @@ const App = () => {
     const jarUrls = {
       framework_jar_url: frameworkJarUrl,
       services_jar_url: servicesJarUrl,
-      miui_services_jar_url: miuiServicesJarUrl,
-      miui_framework_jar_url: miuiFrameworkJarUrl,
     };
 
     const features = {
@@ -114,8 +108,6 @@ const App = () => {
         window.alert('Build started! Wait for 5 - 10 minutes and check the releases page.');
         setFrameworkJarUrl('');
         setServicesJarUrl('');
-        setMiuiServicesJarUrl('');
-        setMiuiFrameworkJarUrl('');
         setAndroidApiLevel('34');
         setIsCN('true');
         setDefaultCore('true');
@@ -188,28 +180,6 @@ const App = () => {
                       id="services-jar-url-input"
                       value={servicesJarUrl}
                       onChange={(e) => setServicesJarUrl(e.target.value)}
-                      required
-                      className="bg-[#2a2a2a] text-white border-[#3a3a3a] focus:border-[#4a4a4a]"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="miui-services-jar-url-input" className="text-[#d1d5db]">MIUI Services JAR URL</Label>
-                    <Input
-                      type="url"
-                      id="miui-services-jar-url-input"
-                      value={miuiServicesJarUrl}
-                      onChange={(e) => setMiuiServicesJarUrl(e.target.value)}
-                      required
-                      className="bg-[#2a2a2a] text-white border-[#3a3a3a] focus:border-[#4a4a4a]"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="miui-framework-jar-url-input" className="text-[#d1d5db]">MIUI Framework JAR URL</Label>
-                    <Input
-                      type="url"
-                      id="miui-framework-jar-url-input"
-                      value={miuiFrameworkJarUrl}
-                      onChange={(e) => setMiuiFrameworkJarUrl(e.target.value)}
                       required
                       className="bg-[#2a2a2a] text-white border-[#3a3a3a] focus:border-[#4a4a4a]"
                     />
